@@ -1,7 +1,7 @@
 tag_cloud
 =========
 
-This plugin generates a tag-cloud.
+This is a modified version of the default tag_cloud, which creates a tag cloud for each category.
 
 Installation
 ------------
