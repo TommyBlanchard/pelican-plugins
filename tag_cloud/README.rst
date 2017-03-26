@@ -1,7 +1,7 @@
 tag_cloud
 =========
 
-This is a modified version of the default tag_cloud, which creates a tag cloud for each category.
+This is a modified version of the default tag_cloud, which creates a tag cloud for each category. To read more about it, see my blog post here: http://tommyblanchard.com/unique-tag-cloud-for-each-category-in-pelican
 
 Installation
 ------------
@@ -47,20 +47,34 @@ Setting name (followed by default value)            What does it do?
                                                     on all articles.
 ================================================    =====================================================
 
-The default theme does not include a tag cloud, but it is pretty easy to add one::
+The default theme does not include a tag cloud, but it is pretty easy to add one (should be added to the article.html template)::
 
-    <ul class="tagcloud">
-        {% for tag in tag_cloud %}
-            <li class="tag-{{ tag.1 }}">
-                <a href="{{ SITEURL }}/{{ tag.0.url }}">
-                {{ tag.0 }}
-                    {% if TAG_CLOUD_BADGE %}
-                        <span class="badge">{{ tag.2 }}</span>
-                    {% endif %}
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
+<div id="tagcloud">
+    {% for cat in tag_cloud %}
+        {% if article.category == cat.0 %}
+                <b><center>{{ cat.0 }} Tags</center></b>
+                <ul class="tagcloud">
+                    {% for tag in cat.1 %}
+                        <li class="tag-{{ tag.1 }}">
+                            <a href="{{ SITEURL }}/{{ tag.0.url }}">
+                                {{ tag.0 }}
+                                {% if TAG_CLOUD_BADGE %}
+                                    <span class="badge">({{ tag.2 }})</span>
+                                {% endif %}
+                            </a>
+                        </li>
+                    {% endfor %}                        
+            </ul> 
+         {% endif %}
+     {% endfor %}
+</div>
+
+The placement of the code depends a bit on how you plan to style it and where you want it to show up. I have mine near the top, right below {% block content %}
+
+To add the tag cloud to the tags and categories pages, the same code needs to be added to index.html. Place it within the first item conditional, right after this:
+
+{# First item #}
+{% if loop.first and not articles_page.has_previous() %}
 
 You should then also define CSS styles with appropriate classes (tag-1 to tag-N,
 where N matches ``TAG_CLOUD_STEPS``), tag-1 being the most frequent, and
